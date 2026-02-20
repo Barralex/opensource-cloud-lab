@@ -1,0 +1,14 @@
+{
+  "name": "stress-lab",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "fastify": "^4.25.0",
+    "pg": "^8.11.0",
+    "@aws-sdk/client-s3": "^3.500.0"
+  }
+}

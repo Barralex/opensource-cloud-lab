@@ -1,0 +1,89 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: stress-lab-secret
+  namespace: default
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://stresslab:stresslab123@postgresql.database.svc.cluster.local/stress_lab"
+  MINIO_ACCESS_KEY: "admin"
+  MINIO_SECRET_KEY: "changeme123"
+  MINIO_HOST: "minio.storage.svc.cluster.local"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-lab
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stress-lab
+  template:
+    metadata:
+      labels:
+        app: stress-lab
+    spec:
+      containers:
+        - name: stress-lab
+          image: stress-lab:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+          envFrom:
+            - secretRef:
+                name: stress-lab-secret
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stress-lab
+  namespace: default
+spec:
+  selector:
+    app: stress-lab
+  ports:
+    - port: 80
+      targetPort: 4000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stress-lab
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stress-lab
+                port:
+                  number: 80

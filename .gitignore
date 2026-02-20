@@ -1,0 +1,41 @@
+# OpenTofu / Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+!example.tfvars
+
+# Secretos (NUNCA commitear)
+*.pem
+*.key
+secrets.yaml
+secrets.json
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Backups
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Age keys (SOPS)
+keys.txt
+*.agekey
+
+# Docs
+*.pdf
+
+# Claude Code (local settings)
+.claude/

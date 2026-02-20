@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infrastructure Status</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0e17;
+    color: #e5e7eb;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+  }
+
+  .cost {
+    background: #064e3b;
+    border: 1px solid #10b981;
+    color: #6ee7b7;
+    padding: 6px 16px;
+    border-radius: 16px;
+    font-size: 12px;
+    margin-bottom: 30px;
+  }
+
+  /* Hierarchy */
+  .hierarchy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .box {
+    border: 2px solid #374151;
+    border-radius: 8px;
+    padding: 12px 24px;
+    text-align: center;
+    background: #111827;
+    min-width: 200px;
+  }
+
+  .box-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .box-sub {
+    font-size: 10px;
+    color: #6b7280;
+  }
+
+  .arrow {
+    font-size: 20px;
+    color: #3b82f6;
+    padding: 8px 0;
+  }
+
+  /* Levels */
+  .level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .level-container {
+    border: 2px dashed #374151;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 0;
+    position: relative;
+  }
+
+  .level-label {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: #0a0e17;
+    padding: 0 8px;
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  .services-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .service {
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 10px 16px;
+    text-align: center;
+    background: #1f2937;
+    min-width: 120px;
+  }
+
+  .service-name {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .service-port {
+    font-size: 10px;
+    color: #10b981;
+  }
+
+  .service-note {
+    font-size: 9px;
+    color: #6b7280;
+  }
+
+  /* Colors */
+  .green { border-color: #10b981; }
+  .yellow { border-color: #f59e0b; }
+  .purple { border-color: #8b5cf6; }
+  .pink { border-color: #ec4899; }
+  .orange { border-color: #f97316; }
+  .blue { border-color: #3b82f6; }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .dot-green { background: #10b981; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-purple { background: #8b5cf6; }
+  .dot-pink { background: #ec4899; }
+  .dot-orange { background: #f97316; }
+
+  /* URLs */
+  .urls {
+    margin-top: 30px;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 16px 24px;
+    background: #111827;
+  }
+
+  .urls-title {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .url-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .url-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .url-name {
+    color: #9ca3af;
+  }
+
+  .url-link {
+    color: #3b82f6;
+  }
+
+  .url-creds {
+    color: #6b7280;
+    font-size: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🏗️ Infrastructure Status</h1>
+<p class="subtitle">Open Source Cloud Lab · DigitalOcean nyc1</p>
+<div class="cost">💰 $24/month</div>
+
+<div class="hierarchy">
+
+  <!-- Internet -->
+  <div class="box">
+    <div class="box-title">🌐 Internet</div>
+    <div class="box-sub">Users / Traffic</div>
+  </div>
+
+  <div class="arrow">↓</div>
+
+  <!-- Droplet -->
+  <div class="level-container">
+    <div class="level-label">DROPLET · 104.248.237.80</div>
+
+    <div class="box yellow" style="margin-bottom: 12px;">
+      <div class="box-title">🖥️ oss-cloud-lab-k3s-dev</div>
+      <div class="box-sub">2 vCPU · 4GB RAM · Ubuntu 24.04</div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- K3s -->
+    <div class="level-container" style="border-color: #f59e0b;">
+      <div class="level-label" style="color: #f59e0b;">☸️ K3s v1.34.4</div>
+
+      <!-- NGINX Ingress -->
+      <div class="service yellow" style="margin-bottom: 12px;">
+        <div class="service-name"><span class="dot dot-yellow"></span>NGINX Ingress</div>
+        <div class="service-port">:80 → :443</div>
+        <div class="service-note">Entry point (ALB)</div>
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <!-- App - 2 replicas -->
+      <div class="services-row" style="margin-bottom: 12px;">
+        <div class="service green">
+          <div class="service-name"><span class="dot dot-green"></span>Stress Lab</div>
+          <div class="service-port">:4000</div>
+          <div class="service-note">pod 1</div>
+        </div>
+        <div class="service green">
+          <div class="service-name"><span class="dot dot-green"></span>Stress Lab</div>
+          <div class="service-port">:4000</div>
+          <div class="service-note">pod 2</div>
+        </div>
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <!-- Backend Services -->
+      <div class="services-row">
+        <div class="service pink">
+          <div class="service-name"><span class="dot dot-pink"></span>PostgreSQL</div>
+          <div class="service-port">:5432</div>
+          <div class="service-note">/db/:n queries</div>
+        </div>
+
+        <div class="service orange">
+          <div class="service-name"><span class="dot dot-orange"></span>MinIO</div>
+          <div class="service-port">:9000</div>
+          <div class="service-note">/upload /download</div>
+        </div>
+
+        <div class="service purple">
+          <div class="service-name"><span class="dot dot-purple"></span>Argo CD</div>
+          <div class="service-port">:30080</div>
+          <div class="service-note">GitOps</div>
+        </div>
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <!-- Monitoring -->
+      <div class="services-row">
+        <div class="service blue">
+          <div class="service-name"><span class="dot dot-yellow"></span>Prometheus</div>
+          <div class="service-port">:9090</div>
+          <div class="service-note">metrics</div>
+        </div>
+
+        <div class="service blue">
+          <div class="service-name"><span class="dot dot-green"></span>Grafana</div>
+          <div class="service-port">/grafana</div>
+          <div class="service-note">dashboards</div>
+        </div>
+
+        <div class="service blue">
+          <div class="service-name"><span class="dot dot-pink"></span>pg_exporter</div>
+          <div class="service-port">:9187</div>
+          <div class="service-note">DB metrics</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<div class="urls" style="margin-top: 20px;">
+  <div class="urls-title">🛠️ Scripts</div>
+
+  <div class="url-row">
+    <span class="url-name">Full Install</span>
+    <span class="url-link">./scripts/install-dev.sh</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">Deploy App</span>
+    <span class="url-link">./scripts/deploy-app.sh</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">Destroy</span>
+    <span class="url-link">./scripts/destroy-dev.sh</span>
+  </div>
+</div>
+
+<!-- URLs -->
+<div class="urls">
+  <div class="urls-title">🔗 Access URLs</div>
+
+  <div class="url-row">
+    <span class="url-name">Stress Lab API</span>
+    <span class="url-link">http://104.248.237.80/</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">├─ Health</span>
+    <span class="url-link">/health</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">├─ Metrics</span>
+    <span class="url-link">/metrics</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">├─ CPU Test</span>
+    <span class="url-link">/cpu/500</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">├─ DB Test</span>
+    <span class="url-link">/db/10</span>
+  </div>
+
+  <div class="url-row">
+    <span class="url-name">└─ Memory Test</span>
+    <span class="url-link">/memory/50</span>
+  </div>
+
+  <div class="url-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #374151;">
+    <span class="url-name">Grafana</span>
+    <span class="url-link">http://104.248.237.80/grafana/</span>
+  </div>
+  <div class="url-row">
+    <span class="url-creds">admin / admin123</span>
+  </div>
+
+  <div class="url-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #374151;">
+    <span class="url-name">Argo CD</span>
+    <span class="url-link">http://104.248.237.80:30080</span>
+  </div>
+  <div class="url-row">
+    <span class="url-creds">admin / YNQt9-dw0pzWbJAl</span>
+  </div>
+</div>
+
+</body>
+</html>
