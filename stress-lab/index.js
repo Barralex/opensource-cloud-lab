@@ -56,11 +56,4 @@ app.get('/files', async () => {
   return { pod: POD, files: (data.Contents || []).map(f => ({ name: f.Key, size: f.Size })) }
 })
 
-// Infrastructure diagram
-import { readFileSync } from 'fs'
-app.get('/diagram', async (req, reply) => {
-  const html = readFileSync('/app/infra-status.html', 'utf8')
-  return reply.type('text/html').send(html)
-})
-
 app.listen({ port: process.env.PORT || 4000, host: '0.0.0.0' })

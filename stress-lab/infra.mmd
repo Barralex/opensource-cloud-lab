@@ -1,0 +1,76 @@
+flowchart LR
+    User["Usuario"]
+
+    User --> DEV
+    User --> PROD
+
+    subgraph DEV["DEV $24/mes"]
+        direction TB
+        subgraph VPS1["104.248.237.80 - 2vCPU 4GB"]
+            direction TB
+            Ing1["NGINX Ingress"]
+            Ing1 --> P1["Pod 1"]
+            Ing1 --> P2["Pod 2"]
+            P1 --> PG1["PostgreSQL 5Gi"]
+            P2 --> PG1
+            P1 --> M1["MinIO 10Gi"]
+            P2 --> M1
+            A1["Argo CD"]
+        end
+    end
+
+    subgraph PROD["PROD ~$100/mes"]
+        direction TB
+        subgraph VPC["VPC 10.20.10.0/24"]
+            direction LR
+            subgraph Control["VPS Control 2vCPU"]
+                direction TB
+                K3s["K3s Server"]
+                Ing2["NGINX Ingress"]
+                A2["Argo CD"]
+            end
+
+            subgraph App["VPS App 4vCPU"]
+                direction TB
+                PA["Pod 1"]
+                PB["Pod 2"]
+                PC["Pod 3"]
+                PD["Pod 4"]
+            end
+
+            subgraph Data["VPS Data 4vCPU"]
+                direction TB
+                PG2["PostgreSQL 50Gi"]
+                M2["MinIO 100Gi"]
+            end
+        end
+
+        Ing2 --> PA
+        Ing2 --> PB
+        Ing2 --> PC
+        Ing2 --> PD
+        PA --> PG2
+        PB --> PG2
+        PC --> PG2
+        PD --> PG2
+        PA --> M2
+        PB --> M2
+        PC --> M2
+        PD --> M2
+    end
+
+    style Ing1 fill:#f59e0b
+    style Ing2 fill:#f59e0b
+    style P1 fill:#10b981
+    style P2 fill:#10b981
+    style PA fill:#10b981
+    style PB fill:#10b981
+    style PC fill:#10b981
+    style PD fill:#10b981
+    style PG1 fill:#ec4899
+    style PG2 fill:#ec4899
+    style M1 fill:#f97316
+    style M2 fill:#f97316
+    style A1 fill:#8b5cf6
+    style A2 fill:#8b5cf6
+    style K3s fill:#3b82f6
