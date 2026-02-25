@@ -1,0 +1,73 @@
+# Stress Lab App
+# Runs on: VPS App node
+# Image: stress-lab:local (built from ../stress-lab/)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-lab
+  namespace: stress-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stress-lab
+  template:
+    metadata:
+      labels:
+        app: stress-lab
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/app: "true"
+      containers:
+      - name: stress-lab
+        image: stress-lab:local
+        imagePullPolicy: Never
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://stress:stress123@postgresql:5432/stress"
+        - name: MINIO_HOST
+          value: "minio"
+        - name: MINIO_ACCESS_KEY
+          value: "admin"
+        - name: MINIO_SECRET_KEY
+          value: "admin123456"
+        ports:
+        - containerPort: 4000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stress-lab
+  namespace: stress-lab
+spec:
+  selector:
+    app: stress-lab
+  ports:
+  - port: 4000
+    targetPort: 4000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stress-lab
+  namespace: stress-lab
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: stress-lab
+            port:
+              number: 4000

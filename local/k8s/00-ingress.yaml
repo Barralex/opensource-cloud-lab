@@ -1,0 +1,11 @@
+# NGINX Ingress Controller
+# Runs on: VPS App node
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+---
+# Using the official manifest but forcing to App node
+# Applied via: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+# Then patched with nodeSelector: node-role.kubernetes.io/app=true
